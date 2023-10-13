@@ -1,2 +1,2 @@
-# Tennis_Court
+# Paddle_Court
 Human Centered Paddle Court System 
