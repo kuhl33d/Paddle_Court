@@ -1,0 +1,44 @@
+Scenario 1:
+  User will book a slot on the court schdule, and emails of players will be collected to inform them with any updates.
+
+Scenario 2:
+  Users will register each unique raquette that will be identified with a unique TUIO Tag that will be used later by the system.
+
+Scenario 3:
+  The system will detect each player skeleton using mediapipe and analysis their movements will Dollarpy. this skeletons will be used to detect the following actions:
+    1. check weather a serve is served correctly.
+    2. players positions across the court.
+    3. check weather foul is happened or not (including rules of paddle).
+    4. final report will be sent to each player showing his in-game analysis.
+
+Scenrio 4:
+  3m Abdallah will have an interface to manage the court schedule and inform the system if a player was absent or not, also he will be the one tasked to manage court equipments and verify the player.
+
+Scenario 5:
+  player identification will be done using face identification module inside the manage interface. also a face collecting module will be used alongside in the user registeration process in order to achieve authenticity of the system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+je m'appelle mohamed sherif
+La chatte de la mère d'Ayman Ezzat, 
