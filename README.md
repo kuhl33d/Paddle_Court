@@ -1,2 +1,2 @@
-# Paddle_Court
-Human Centered Paddle Court System 
+# Ping_Pong_Manager
+Human Centered Ping-Pong Scheduler System 
