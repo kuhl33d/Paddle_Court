@@ -1,5 +1,5 @@
 PACT:
-  Paddle managing system that record users skelton extracted from camera feed accross
+  real time table tennis penalty detection managing system that record users skelton extracted from camera feed accross
 the paddle court. Rules of the game will be calculated throw 
 
 
