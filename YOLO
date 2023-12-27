@@ -1,0 +1,36 @@
+import os
+from ultralytics import YOLO
+import cv2
+
+VIDEOS_DIR = os.path.join('.', 'videos')
+video_path = os.path.join(VIDEOS_DIR, 'alpaca1.mp4')
+video_path_out = '{}_out.mp4'.format(video_path)
+
+model_path = os.path.join('.', 'runs', 'detect', 'train', 'weights', 'last.pt')
+model = YOLO("Yolov8n.yaml")  # Load the model
+
+cap = cv2.VideoCapture(video_path)
+ret, frame = cap.read()
+
+if not ret:
+    raise ValueError("Failed to open video file or no frames found.")
+
+H, W = frame.shape[:2] if ret else (0, 0)
+fps = int(cap.get(cv2.CAP_PROP_FPS))
+out = cv2.VideoWriter(video_path_out, cv2.VideoWriter_fourcc(*'MP4V'), fps, (W, H))
+
+threshold = 0.5
+
+while ret:
+    results = model(frame)  # Perform object detection
+    out.write(frame)
+    ret, frame = cap.read()
+
+    if ret:
+        H, W = frame.shape[:2]
+    else:
+        break
+
+cap.release()
+out.release()
+cv2.destroyAllWindows()
