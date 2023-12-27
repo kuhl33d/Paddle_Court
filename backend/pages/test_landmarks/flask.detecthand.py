@@ -7,17 +7,19 @@ def detect_hand():
     if 'image' in request.files:
         # file
         image = request.files['image']
+        landmarks = detect_hand_in_image(image)
     else:
-        # webcam
-        image = request.data
+        # video
+        frames = request.files.getlist('image')
+        landmarks = []
 
-    # models foes here
-    landmarks = detect_hand_in_image(image)
+        for frame in frames:
+            landmarks.append(detect_hand_in_image(frame))
 
     return jsonify({'landmarks': landmarks})
 
 def detect_hand_in_image(image):
-    # assure its normalized
+    #test landmarks
     landmarks = [{'x': 0.1, 'y': 0.2}, {'x': 0.3, 'y': 0.4}, {'x': 0.5, 'y': 0.6}]
     
     return landmarks
