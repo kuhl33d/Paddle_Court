@@ -1,0 +1,23 @@
+Scenario 1:
+  Table manager will login on system, those his face data will be fetched for later recognition.
+
+Scenario 2:
+  A realtime feed of camera is being processed in order to do each function:
+    1. whenever there's an id show to the camera, person of that id will be added to the queue.
+    2. a contstant feed to the camera of the table is being sent to the server to process current game.
+    3. table manager only interacts with grdtures in order to edit the queue (shift or remove) person.
+    4. current game mode is being stusing a tuio marker.
+
+Scenario 3:
+  The system will detect each player skeleton using mediapipe and analysis their movements will Dollarpy. this skeletons will be used to detect the following actions:
+    1. check weather a serve is served correctly.
+    2. players positions across the table.
+    3. check weather foul is happened or not (including rules of paddle).
+    4. final report will be sent to each player showing his in-game analysis.
+    5. calculate game rules.
+
+Scenrio 4:
+  table manager will have an interface to manage the ping-pong and inform the system if a player was left or not, also he will be the one tasked to manage equipments and verify the player.
+
+Scenario 5:
+  player identification will be done using face identification module inside the manage interface,also table manager face will be recognized in order alter the queue.
