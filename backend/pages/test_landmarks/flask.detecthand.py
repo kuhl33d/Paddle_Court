@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type, Authorization'
 
 @app.route('/detect_hand', methods=['POST'])
 def detect_hand():
@@ -19,7 +22,7 @@ def detect_hand():
     return jsonify({'landmarks': landmarks})
 
 def detect_hand_in_image(image):
-    #test landmarks
+    # test landmarks
     landmarks = [{'x': 0.1, 'y': 0.2}, {'x': 0.3, 'y': 0.4}, {'x': 0.5, 'y': 0.6}]
     
     return landmarks

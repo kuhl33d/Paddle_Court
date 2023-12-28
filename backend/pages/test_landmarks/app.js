@@ -31,7 +31,7 @@ video.addEventListener('canplay', () => {
         } else {
             captureFrameFromVideo();
         }
-    }, 1000); // Adjust the interval as needed
+    }, 100000); // Adjust the interval as needed
 });
 
 function startVideoFromFile(file) {
@@ -66,18 +66,30 @@ function processImage(image) {
     fetch('http://localhost:5000/detect_hand', {
         method: 'POST',
         body: formData,
+        mode: "cors",
+        cache: "no-cache",
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': localStorage.getItem("userToken")
+        },
+        redirect: "follow",
+        referrer: "no-referrer"
     })
     .then(response => response.json())
     .then(result => {
         // process result
+        console.log(result);
         drawLandmarks(result.landmarks);
     })
     .catch(error => console.error('Error:', error));
 }
 
 function drawLandmarks(landmarks) {
+    //draw image
+//    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
     // clear
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // draw landmark
     ctx.fillStyle = 'red';
@@ -86,6 +98,7 @@ function drawLandmarks(landmarks) {
         ctx.arc(point.x * canvas.width, point.y * canvas.height, 5, 0, 2 * Math.PI);
         ctx.fill();
     }
+
 }
 
 function dataURItoBlob(dataURI) {
