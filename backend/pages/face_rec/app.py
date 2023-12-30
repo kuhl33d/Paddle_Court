@@ -86,7 +86,7 @@ def train_classifier(nbr):
     ids = np.array(ids)
  
     # Train the classifier and save
-    clf = cv2.face.LBPHFaceRecognizer_create()
+    clf = cv2.face.LBPHFaceRecognizer.create()
     # clf = cv2.face.EigenFaceRecognizer_create()
     clf.train(faces, ids)
     clf.write("classifier.xml")
@@ -127,7 +127,7 @@ def face_recognition():  # generate frame by frame from camera
         return img
  
     faceCascade = cv2.CascadeClassifier("D:\\.MSA\\CS484_hci\\.proj\\Paddle_Court\\backend\\pages\\face_rec\\resources\\haarcascade_frontalface_default.xml")
-    clf = cv2.face.LBPHFaceRecognizer_create()
+    clf = cv2.face.LBPHFaceRecognizer.create()
     # clf = cv2.face.EigenFaceRecognizer_create()
     clf.read("classifier.xml")
  
