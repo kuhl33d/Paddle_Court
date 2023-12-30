@@ -1,8 +1,11 @@
 import numpy as np
 import cv2
-import autopy
 from matplotlib import pyplot as plt
 import pygame
+import ctypes
+
+user32 = ctypes.windll.user32
+screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 ESCAPE_KEY = 27
 
@@ -20,7 +23,7 @@ video_resolution=(1280,720)
 pygame.init()
 screen =pygame.display.set_mode((600,480))
 
-screen_resolution = autopy.screen.size()
+screen_resolution = screensize
 
 eye_x_positions = list()
 eye_y_positions = list()
