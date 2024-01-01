@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Gaze Estimation</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+    <script>
+        
+        Promise.all([
+            blazeface.load(),
+            facemesh.load(),
+            tf.loadLayersModel('path/to/gaze_model/model.json') 
+        ]).then(([blazeModel, faceMeshModel, gazeModel]) => {
+            startGazeEstimation(blazeModel, faceMeshModel, gazeModel);
+        });
+
+        let gyroscopeData = { alpha: 0, beta: 0, gamma: 0 };
+        let transformationMatrix = [
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1]
+        ];
+        let prevGazeCoordinates = { x: 0, y: 0 };
+        let calibrationPoints = [{ x: 0.2, y: 0.2 }, { x: 0.8, y: 0.2 }, { x: 0.5, y: 0.8 }];
+        let currentCalibrationPointIndex = 0;
+
+        window.addEventListener('deviceorientation', (event) => {
+            gyroscopeData = { alpha: event.alpha, beta: event.beta, gamma: event.gamma };
+        });
+
+        const videoElement = document.getElementById('video');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                videoElement.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error('Error accessing camera:', error);
+            });
+
+        function estimateGaze(blazeModel, faceMeshModel, gazeModel) {
+            const video = document.getElementById('video');
+
+            const blazePredictions = blazeModel.estimateFaces(video);
+            if (blazePredictions.length === 0) {
+                return;
+            }
+
+            const faceMeshPredictions = faceMeshModel.estimateFaces(video);
+            if (faceMeshPredictions.length === 0) {
+                return;
+            }
+
+            const face = blazePredictions[0];
+            const landmarks = faceMeshPredictions[0].scaledMesh;
+
+            const inputTensor = tf.tensor2d([/* Extract relevant features from face and landmarks */]);
+
+            const gazePrediction = gazeModel.predict(inputTensor);
+
+            const gazeDirection = {
+                x: gazePrediction[0].dataSync()[0],
+                y: gazePrediction[0].dataSync()[1]
+            };
+
+            const calibratedGaze = transformGaze(gazeDirection);
+            const screenCoordinates = mapGazeToScreen(calibratedGaze);
+            const smoothedCoordinates = smoothGaze(screenCoordinates, prevGazeCoordinates, 0.2);
+
+            
+            
+
+            
+            prevGazeCoordinates = smoothedCoordinates;
+
+            
+            if (currentCalibrationPointIndex < calibrationPoints.length) {
+                const calibrationPoint = calibrationPoints[currentCalibrationPointIndex];
+                const tolerance = 0.1; 
+
+                
+                if (
+                    Math.abs(smoothedCoordinates.x - calibrationPoint.x) < tolerance &&
+                    Math.abs(smoothedCoordinates.y - calibrationPoint.y) < tolerance
+                ) {
+                    
+                    currentCalibrationPointIndex++;
+
+                    if (currentCalibrationPointIndex === calibrationPoints.length) {
+                        
+                        console.log("Calibration completed!");
+                    }
+                }
+            }
+        }
+
+        function transformGaze(gazeDirection) {
+            const transformedGaze = {
+                x: transformationMatrix[0][0] * gazeDirection.x + transformationMatrix[0][1] * gazeDirection.y + transformationMatrix[0][2] * gazeDirection.z,
+                y: transformationMatrix[1][0] * gazeDirection.x + transformationMatrix[1][1] * gazeDirection.y + transformationMatrix[1][2] * gazeDirection.z,
+                z: transformationMatrix[2][0] * gazeDirection.x + transformationMatrix[2][1] * gazeDirection.y + transformationMatrix[2][2] * gazeDirection.z
+            };
+
+            return transformedGaze;
+        }
+
+        function mapGazeToScreen(gazeDirection) {
+            return { x: gazeDirection.x, y: gazeDirection.y };
+        }
+
+        function smoothGaze(currentCoordinates, previousCoordinates, smoothingFactor) {
+            const smoothedX = (1 - smoothingFactor) * previousCoordinates.x + smoothingFactor * currentCoordinates.x;
+            const smoothedY = (1 - smoothingFactor) * previousCoordinates.y + smoothingFactor * currentCoordinates.y;
+
+            return { x: smoothedX, y: smoothedY };
+        }
+
+        setInterval(() => estimateGaze(blazeModel, faceMeshModel, gazeModel), 100);
+
+        function startGazeEstimation(blazeModel, faceMeshModel, gazeModel) {
+            
+        }
+
+    </script>
+</head>
+<body>
+    <canvas id="calibrationCanvas" width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
+    <video id="video" autoplay></video>
+
+    <!-- Continue the rest of the HTML and script as needed -->
+
+</body>
+</html>
